@@ -1,6 +1,6 @@
 # Local RAG Assistant
 
-A privacy-focused local AI assistant that uses **Retrieval-Augmented Generation (RAG)** to answer questions from PDF documents without requiring documents to be sent to a remote AI service.
+A privacy-focused local AI assistant for querying PDF documents using Retrieval-Augmented Generation (RAG) and local LLM inference.
 
 ## Overview
 
