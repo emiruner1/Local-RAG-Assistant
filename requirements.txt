@@ -1,0 +1,5 @@
+streamlit
+numpy
+pypdf
+openai
+foundry-local-sdk-winml
