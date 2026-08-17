@@ -1,1 +1,189 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local RAG Assistant</title>
 
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+
+        .container {
+            width: 900px;
+            max-width: 92%;
+            margin: 50px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 35px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        input[type="file"] {
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            resize: vertical;
+            font-size: 15px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 11px 22px;
+            border: none;
+            border-radius: 8px;
+            background: #111827;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #374151;
+        }
+
+        .message {
+            padding: 12px;
+            background: #ecfdf5;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .answer {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .sources {
+            margin-top: 20px;
+        }
+
+        .sources li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Local RAG Assistant</h1>
+
+    <div class="subtitle">
+        PDF belgelerinizi yükleyin ve yerel AI modelinize sorular sorun.
+    </div>
+
+    {% if mesaj %}
+        <div class="message">
+            {{ mesaj }}
+        </div>
+    {% endif %}
+
+    <div class="card">
+
+        <h2>PDF Yükle</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <input
+                type="file"
+                name="pdf"
+                accept=".pdf"
+                required
+            >
+
+            <button type="submit">
+                PDF Yükle
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Soru Sor</h2>
+
+        <form method="POST">
+
+            <textarea
+                name="soru"
+                placeholder="PDF içerisindeki bilgiler hakkında bir soru sorun..."
+                required
+            ></textarea>
+
+            <button type="submit">
+                Sor
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% if cevap %}
+
+    <div class="card">
+
+        <h2>Cevap</h2>
+
+        <div class="answer">
+            {{ cevap }}
+        </div>
+
+        {% if kaynaklar %}
+
+        <div class="sources">
+
+            <h3>Kaynaklar</h3>
+
+            <ul>
+                {% for kaynak in kaynaklar %}
+                    <li>{{ kaynak }}</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
