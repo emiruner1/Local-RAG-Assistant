@@ -1,21 +1,27 @@
 import json
 
-from openai import OpenAI
+from foundry_local_sdk import Configuration, FoundryLocalManager
 
 from config import EMBEDDING_MODEL
 
 
-client = OpenAI(
-    base_url="http://127.0.0.1:65228/v1",
-    api_key="unused"
+# Initialize Foundry Local
+FoundryLocalManager.initialize(
+    Configuration(app_name="local-rag-assistant")
 )
+
+manager = FoundryLocalManager.instance
+
+# Get and load the embedding model
+model = manager.catalog.get_model(EMBEDDING_MODEL)
+model.load()
+
+# Create the embedding client
+client = model.get_embedding_client()
 
 
 def create_embedding(text):
-    response = client.embeddings.create(
-        model=EMBEDDING_MODEL,
-        input=text
-    )
+    response = client.generate_embedding(text)
 
     return response.data[0].embedding
 
