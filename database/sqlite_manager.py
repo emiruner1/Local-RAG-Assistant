@@ -1,8 +1,15 @@
+import os
 import sqlite3
 from config import DATABASE
 
 
 def get_connection():
+    # Make sure the database directory exists
+    database_dir = os.path.dirname(DATABASE)
+
+    if database_dir:
+        os.makedirs(database_dir, exist_ok=True)
+
     return sqlite3.connect(DATABASE)
 
 
@@ -13,9 +20,9 @@ def create_table():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS documents(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        source TEXT,
-        content TEXT,
-        embedding TEXT
+        source TEXT NOT NULL,
+        content TEXT NOT NULL,
+        embedding TEXT NOT NULL
     )
     """)
 
@@ -28,7 +35,10 @@ def insert_chunk(source, content, embedding):
     cursor = conn.cursor()
 
     cursor.execute(
-        "INSERT INTO documents(source, content, embedding) VALUES(?,?,?)",
+        """
+        INSERT INTO documents(source, content, embedding)
+        VALUES (?, ?, ?)
+        """,
         (source, content, embedding)
     )
 
@@ -40,7 +50,9 @@ def get_all_chunks():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT source, content, embedding FROM documents")
+    cursor.execute(
+        "SELECT source, content, embedding FROM documents"
+    )
 
     rows = cursor.fetchall()
 
@@ -53,7 +65,9 @@ def document_list():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT DISTINCT source FROM documents")
+    cursor.execute(
+        "SELECT DISTINCT source FROM documents"
+    )
 
     rows = cursor.fetchall()
 
@@ -66,7 +80,9 @@ def chunk_count():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT COUNT(*) FROM documents")
+    cursor.execute(
+        "SELECT COUNT(*) FROM documents"
+    )
 
     count = cursor.fetchone()[0]
 
@@ -78,6 +94,8 @@ def chunk_count():
 def delete_database():
     conn = get_connection()
     cursor = conn.cursor()
+
     cursor.execute("DELETE FROM documents")
+
     conn.commit()
     conn.close()
