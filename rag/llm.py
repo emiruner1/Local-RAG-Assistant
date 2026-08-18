@@ -1,12 +1,21 @@
-from openai import OpenAI
+from foundry_local_sdk import Configuration, FoundryLocalManager
 
 from config import CHAT_MODEL
 
 
-client = OpenAI(
-    base_url="http://127.0.0.1:65228/v1",
-    api_key="unused"
+# Initialize Foundry Local
+FoundryLocalManager.initialize(
+    Configuration(app_name="local-rag-assistant")
 )
+
+manager = FoundryLocalManager.instance
+
+# Get and load the chat model
+model = manager.catalog.get_model(CHAT_MODEL)
+model.load()
+
+# Create chat client
+client = model.get_chat_client()
 
 
 def ask_llm(question, context):
@@ -15,7 +24,7 @@ You are a helpful AI assistant.
 
 Answer using ONLY the context below.
 
-If possible, summarize the context.
+If the answer cannot be found in the context, say that you don't know.
 
 Context:
 {context}
@@ -24,9 +33,8 @@ Question:
 {question}
 """
 
-    response = client.chat.completions.create(
-        model=CHAT_MODEL,
-        messages=[
+    response = client.complete_chat(
+        [
             {
                 "role": "user",
                 "content": prompt
