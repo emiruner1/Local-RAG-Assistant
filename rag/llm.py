@@ -1,6 +1,7 @@
 from foundry_local_sdk import Configuration, FoundryLocalManager
 
 from config import CHAT_MODEL
+from rag.prompt import build_rag_prompt
 
 
 # Initialize Foundry Local
@@ -19,19 +20,7 @@ client = model.get_chat_client()
 
 
 def ask_llm(question, context):
-    prompt = f"""
-You are a helpful AI assistant.
-
-Answer using ONLY the context below.
-
-If the answer cannot be found in the context, say that you don't know.
-
-Context:
-{context}
-
-Question:
-{question}
-"""
+    prompt = build_rag_prompt(question, context)
 
     response = client.complete_chat(
         [
