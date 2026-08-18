@@ -39,7 +39,7 @@
             padding: 25px;
             border-radius: 12px;
             margin-bottom: 20px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
         }
 
         input[type="file"] {
@@ -88,8 +88,22 @@
             margin-top: 20px;
         }
 
-        .sources li {
-            margin-bottom: 6px;
+        .source-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .source-name {
+            font-weight: bold;
+        }
+
+        .score {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -109,6 +123,7 @@
             {{ mesaj }}
         </div>
     {% endif %}
+
 
     <div class="card">
 
@@ -163,17 +178,29 @@
             {{ cevap }}
         </div>
 
+
         {% if kaynaklar %}
 
         <div class="sources">
 
             <h3>Kaynaklar</h3>
 
-            <ul>
-                {% for kaynak in kaynaklar %}
-                    <li>{{ kaynak }}</li>
-                {% endfor %}
-            </ul>
+            {% for kaynak in kaynaklar %}
+
+                <div class="source-item">
+
+                    <div class="source-name">
+                        📄 {{ kaynak.source }}
+                    </div>
+
+                    <div class="score">
+                        Similarity Score:
+                        {{ "%.3f"|format(kaynak.score) }}
+                    </div>
+
+                </div>
+
+            {% endfor %}
 
         </div>
 
